@@ -1,0 +1,103 @@
+const BottomNav = () => {
+    const style = `
+    * {
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+display: none;
+}
+
+html,
+body {
+height: 100vh;
+overflow: hidden;
+color: #fff;
+font-family: 'Helvetica Neue', sans-serif;
+}
+
+.slider-container {
+height: 100vh;
+overflow-y: scroll;
+scroll-snap-type: y mandatory;
+scroll-behavior: smooth;
+}
+
+.slider-children {
+height: 100vh;
+scroll-snap-align: start;
+background: #000;
+position: relative;
+border: 1px solid transparent;
+}
+
+.video {
+position: absolute;
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.video-content {
+padding: 10px;
+position: relative;
+top: 85%;
+color: #fff;
+}
+
+.bottom-nav {
+position: fixed;
+right: 0;
+bottom: 0;
+left: 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px;
+background-color: #000;
+}
+
+.bottom-nav a {
+color: #fff;
+text-decoration: none;
+}
+
+.fa {
+font-size: 20px;
+}
+
+.fa-plus {
+color: #000;
+background: #fff;
+padding: 3px 10px;
+border-radius: 10px;
+border: 2px solid #ff5722c4;
+}`;
+    return (
+        <>
+        <style>{{style}}</style>
+            <nav className="bottom-nav">
+                <a className="navbar-brand" href="/">
+                <i className="fa fa-home"></i>
+                </a>
+                <a className="navbar-brand" href="/">
+                <i className="fa fa-search"></i>
+                </a>
+                <a className="navbar-brand" href="/">
+                <i className="fa fa-plus"></i>
+                </a>
+                <a className="navbar-brand" href="/">
+                <i className="fa fa-commenting"></i>
+                </a>
+                <a className="navbar-brand" href="/">
+                <i className="fa fa-user"></i>
+                </a>
+            </nav>
+        </>
+
+    );
+  };
+  
+  export default BottomNav;
