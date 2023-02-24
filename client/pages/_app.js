@@ -9,7 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 import {Provider} from '../context';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import Head from 'next/head'
+import Head from 'next/head';
+import { fetchJSON } from '../../server/utills/helpers';
+
 const theme = createTheme({
     // breakpoints: {
     //   values: {
@@ -33,6 +35,13 @@ function MyApp({ Component, pageProps }) {
     const [value, setValue] = React.useState(0);
     const [title, setTitle] = React.useState("Stairviews");
     const [documentLoading, setDocumentLoading] = React.useState(true);
+    const [ws, setWs] = React.useState();
+
+    const [account, setAccount] = React.useState({});
+    const dataGoogleAccount = async () => {
+      const data = await fetchJSON("/api/logingoogle");
+      return data;
+    };
 
     React.useEffect(async () => {
       if(document!=undefined) {
@@ -40,7 +49,24 @@ function MyApp({ Component, pageProps }) {
           setDocumentLoading(false)
         }
       }
-    }, [])
+
+      dataGoogleAccount().then((data) => setAccount({...data, google: true})).catch((err) => {
+        console.log(err);
+      });
+      console.log(account);
+      const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
+  
+      ws.onmessage = (event) => {
+        // console.log(event.data);
+        console.log(event.data);
+      };
+      setWs(ws);
+
+      console.log(account);
+    }, []);
+
+
+
   return (
     <React.StrictMode>
       <Head>

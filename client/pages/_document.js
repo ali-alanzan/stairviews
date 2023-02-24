@@ -3,6 +3,7 @@ import theme from '../components/ui/Theme';
 import {ThemeProvider} from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/material/styles';
 
+
 class MyDocument extends Document {
   render() {
     return (
@@ -16,10 +17,12 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
         />
+          
         </Head>
         <body>
           <Main />
           <NextScript />
+
         </body>
       </Html>
     )

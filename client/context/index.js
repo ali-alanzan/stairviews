@@ -46,7 +46,7 @@ const Provider = ({children}) => {
     }, function (error)  {
         // any status code that false outside the range of 2xx cause this function to trigger
         let res = error.response;
-        if (res.status === 401 && res.config && !res.config.__isRetryRequest) {
+        if (typeof(res.status) != undefined && res.status === 401 && res.config && !res.config.__isRetryRequest) {
             return new Promise((resolve, reject) => {
                 axios.get('/api/logout')
                 .then( (data) => {

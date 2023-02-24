@@ -1,5 +1,6 @@
 import Hero from "../components/ui/Hero"
 import React, { useEffect, useState } from 'react';
+import UserRoute from '../components/routes/UserRoute';
 import {Context} from '../context';
 import {useRouter} from 'next/router';
 
@@ -114,10 +115,8 @@ export default function Register(props) {
     `;
 
     return(
-        <>
-            <Script src="http://apis.google.com/js/platform.js"/>
-            <Script src="http://apis.google.com/js/api.js"/>
-
+        <UserRoute>
+          <Script src="http://apis.google.com/js/platform.js"/>
                 <style>{style}</style>
         <Grid container
             // slider container
@@ -161,6 +160,6 @@ export default function Register(props) {
                
             </Grid>
 
-        </>
+        </UserRoute>
     )
 }

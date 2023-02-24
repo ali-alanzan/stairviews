@@ -1,6 +1,6 @@
 import Hero from "../components/ui/Hero"
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Context} from '../context';
 
 import {useRouter} from 'next/router';
@@ -29,6 +29,7 @@ import TextField from '@mui/material/TextField';
 
 import airplane from '../assets/send.svg';
 import CircularProgress from '@mui/material/CircularProgress';
+import Script from 'next/script'
 
 
 
@@ -60,15 +61,6 @@ export default function Login(props) {
     const theme = useTheme();
     const classes = useStyles(theme);
 
-
-    const [email, setEmail] = React.useState("");
-    const [emailHelper, setEmailHelper] = React.useState("");
-
-    const [password, setPassword] = React.useState("");
-    const [passwordHelper, setPasswordHelper] = React.useState("");
-
-    const [showPassword, setShowPassword] = React.useState(false);
-    
     const [loading, setLoading] = React.useState(false);
 
     
@@ -77,108 +69,45 @@ export default function Login(props) {
 
     const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
     const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
-
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-      
-    const onChange = event => {
-        let valid, valid1, valid2, valid3;
-        const value = event.target.value;
-        switch(event.target.id) {
-            case 'email':
-                setEmail(value);
-                valid = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value);
-                if(!valid) {
-                    setEmailHelper("Invalid E-mail");
-                } else {
-                    setEmailHelper("");
-                }
-                break;
-            case 'password':
-                setPassword(value);
-                valid = /[A-Z]/g.test(value);
-                valid1 = /[a-z]/g.test(value);
-                valid2 = /[0-9]/g.test(value);
-                valid3 = /[^A-z0-9]/g.test(value);
-                
-          //      console.log(value, valid, valid1, valid2, valid3)
-                if(!valid || !valid1) {
-                    setPasswordHelper("Your password must include more one characters ( A-z )");
-                }  else if(!valid2) {
-                    setPasswordHelper("Your password must include a number");
-                }  else if(!valid3) {
-                    setPasswordHelper("Your password must include unique character");
-                }  else {
-                    setPasswordHelper("");
-                }
-                break;
-            default:
-                break;
-        }
+    const [gp, setGp] = useState({});
+    const authenticate = () => {
+        return gp.auth2.getAuthInstance().signIn({
+            scope: "https://www.googleapis.com/auth/youtube.force.ssl"
+        })
+        .then(function () {
+            console.log("Sign in successful");
+        }, function (err) {
+            console.log(err)
+        });
     }
 
-    const onConfirm = () => {
-        
+    const loadClient = () => {
+        gp.client.setApiKey();
+        return gp.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+         .then(function () {
+            console.log("GAPI client loaded successfuly");
+        }, function (err) {
+            console.log(err);
+         });
     }
 
-    const  {state, dispatch} = React.useContext(Context);
-    const {user} = state;
     useEffect(() => {
-        if (user !== null) {
-            const {redirect_url} = router.query ;
-            if(redirect_url!=undefined&&redirect_url.includes(window.location.origin)) {
-                router.push(redirect_url.substring(redirect_url.indexOf(window.location.origin) + window.location.origin.length));
-                return;
-            }
-            router.push("/");
-        }
-    }, [user]);
-
-    
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if(email.length<=1 || password.length <=1) {
-            toast('Missing login fields');
-            return;
-        }
-        try {
-        
-            setLoading(true);
-
-            const {data} = await axios.post('/api/login', {
-                    email, password
+        console.log(typeof(gapi) == undefined);
+        if(typeof(gapi) == undefined) {
+            setGp(gapi);
+            gp.load("client:auth2", function () {
+                gp.auth2.init({
+                    client_id: process.env.YTG_AUTH
+                });
             });
-
-            dispatch({
-                type: "LOGIN",
-                payload: data,
-            });
-
-            // save in local storage
-            window.localStorage.setItem('user', JSON.stringify(data));
-
-            // redirect
-            // router.push('/');
-      //      console.log("Login Response", data);
-
-        } catch (err) {
-            toast(err.response.data);
-            setLoading(false);
+            console.log(gp);
+            gp.authenticate();
         }
-    }
-    
-    const ForgetPasswordLink = styled('a')({
-        color: theme.palette.error.light
-    })  
+    }, []);
+
     return(
         <>
+        <Script src="https://accounts.google.com/gsi/client"/>
         <Hero title="Login" />
         <Grid item container direction="column" alignItems="center" 
             justifyContent="center" 
@@ -191,77 +120,42 @@ export default function Login(props) {
             <Grid item 
             sx={{width: matchesSM ? '80%' : matchesMD ? '60%' : '22rem'}}
             >
-            <form onSubmit={handleSubmit}>
-                            
-                            <Grid item container direction="column" sx={{maxWidth: "20em"}}>
-                                <Grid item sx={{marginBottom: ".5em"}}>
-                                    <TextField label="Email" error={emailHelper.length !== 0} 
-                                        helperText={emailHelper}
-                                        fullWidth id="email" variant="standard" value={email} 
-                                        onChange={onChange} />
-                                </Grid>
-                                <Grid item sx={{marginBottom: ".5em"}}>
-                                    <TextField label="Password" 
-                                    error={passwordHelper.length !== 0} 
-                                        helperText={passwordHelper}
-                                        fullWidth id="password"
-                                        type={showPassword ? 'text' : 'password'} 
-                                        variant="standard"  
-                                        value={password} 
-                                        onChange={onChange}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                <IconButton
-                                                  aria-label="toggle password visibility"
-                                                  onClick={handleClickShowPassword}
-                                                  onMouseDown={handleMouseDownPassword}
-                                                >
-                                                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        
-                                        />
-                                </Grid>
+                <Grid container>
+                    <Grid item>
+                        
+                    </Grid>
+                    <Grid>
+                        {/* <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => {
+                                authenticate().then(loadClient)
+                            }}
+                        >
+                            <Typography variant="heading" align="center">
+                                Login By Google
+                            </Typography>
+                            <Visibility />
+                        </IconButton> */}
+                        <div id="g_id_onload"
+                            data-client_id="854452941545-f2nmavdc2l2pkgetv76dsvhtdr8o0hne.apps.googleusercontent.com"
+                            data-context="signin"
+                            data-ux_mode="popup"
+                            data-login_uri="http://localhost:3000/login"
+                            data-nonce=""
+                            data-itp_support="true">
+                        </div>
 
-                            </Grid>
-
-                
-                            <Grid item container justifyContent="center" sx={{marginTop: "2em"}}>
-                                <Button 
-                                    type="submit"
-                                    disabled={ emailHelper.length !== 0 || passwordHelper.length !== 0 }
-                                    variant="contained"
-                                    sx={{
-                                        ...classes.sendButton
-                                    }}>
-
-                                    {
-                                        loading ? <CircularProgress sx={{color: "white"}}  />
-                                        : <> 
-                                        Login <img src={airplane.src} alt="paper airplan" sx={{marginLeft: "1em"}} />
-                                        </>
-                                    }
-                                </Button>
-
-                            </Grid>
-
-                            <Grid item container justifyContent="center" sx={{margin: "2em auto"}}>
-                                <Typography variant="body1" align="center">
-                                    Not yet Registered? <Link href="/register"> Register </Link>
-                                </Typography>
-                            </Grid>
-
-                            <Grid item container justifyContent="center" sx={{margin: "2em auto"}}>
-                                <Link href="/forget-password" passHref>
-                                    <ForgetPasswordLink>
-                                        Forget Password? 
-                                    </ForgetPasswordLink>
-                                </Link>
-                            </Grid>
-        </form>
+                        <div className="g_id_signin"
+                            data-type="standard"
+                            data-shape="pill"
+                            data-theme="filled_blue"
+                            data-text="continue_with"
+                            data-size="large"
+                            data-locale="ar"
+                            data-logo_alignment="left">
+                        </div>
+                    </Grid>
+                </Grid>
             </Grid>
 
         </Grid>
