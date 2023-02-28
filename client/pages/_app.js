@@ -10,7 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import {Provider} from '../context';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Head from 'next/head';
-import { fetchJSON } from '../../server/utills/helpers';
+import { fetchJSON } from '../components/utills/helpers';
+import { appWithTranslation } from 'next-i18next';
 
 const theme = createTheme({
     // breakpoints: {
@@ -54,13 +55,13 @@ function MyApp({ Component, pageProps }) {
         console.log(err);
       });
       console.log(account);
-      const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
+      // const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
   
-      ws.onmessage = (event) => {
+      // ws.onmessage = (event) => {
         // console.log(event.data);
-        console.log(event.data);
-      };
-      setWs(ws);
+        // console.log(event.data);
+      // };
+      // setWs(ws);
 
       console.log(account);
     }, []);
@@ -87,4 +88,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
-import continueAccounts from '../../../assets/continue-accounts.jpg'
+import continueAccounts from '../../../assets/google-logo-transparent.png'
 import { Button } from '@mui/material';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 
@@ -9,6 +9,9 @@ import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 import { useTheme } from '@mui/styles';
 import {useRouter} from 'next/router';
 import Skeleton from '@mui/material/Skeleton';
+import GoogleIcon from '@mui/icons-material/Google';
+
+import { fetchJSON } from '../../utills/helpers';
 
 const ContinueToAccount = ({documentLoading}) => {
 
@@ -22,7 +25,27 @@ const ContinueToAccount = ({documentLoading}) => {
         const theme = useTheme();
         const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
         const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
-  
+        
+    
+        async function handleStartLogin() {
+            // Get the location of endpoints from Google
+            const { authorization_endpoint } = await fetchJSON(
+              "https://accounts.google.com/.well-known/openid-configuration"
+            );
+        
+            // Tell Google how to authentication
+            const query = new URLSearchParams({
+              response_type: "token",
+              scope: "openid profile email",
+              client_id: process.env.YTG_AUTH,
+              // Tell user to come back to http://localhost:3000/callback when logged in
+              redirect_uri: window.location.origin + "/login/callback/google",
+            });
+            // Redirect the browser to log in
+            window.location.href = authorization_endpoint + "?" + query;
+          }
+
+
         const classes = {
             button: {
                 fontFamily: "Pacifico",
@@ -48,6 +71,9 @@ const ContinueToAccount = ({documentLoading}) => {
             container
                 sx={{
                     maxWidth: '100%',
+                    justifyContent: "center",
+                    alignItems: "end",
+                    height: "100%"
                 }}
                 direction="column"
             >
@@ -57,37 +83,16 @@ const ContinueToAccount = ({documentLoading}) => {
                                     color="secondary" 
                                     sx={{
                                         ...classes.button,
+                                        backgroundColor: "#fff",
+                                        color: "#000"
                                     }} 
-                                    onClick={() => router.push('/register')}
-                                    endIcon={<HowToRegIcon />}
+                                    onClick={handleStartLogin}
+                                    endIcon={<GoogleIcon />}
                                 >
-                                    Create new account
+                                    Continue with Google
                                 </Button>
                                
 
-                            
-                                <Button variant="contained"  
-                                    color="secondary" 
-                                    sx={{
-                                     ...classes.button
-                                    }} 
-                                    onClick={() => router.push('/login')}
-                                    endIcon={<LoginIcon />}
-                                >
-                                    Login now
-                                </Button>
-                               
-
-                                <Button variant="contained"  
-                                    color="secondary" 
-                                    sx={{
-                                     ...classes.button
-                                    }} 
-                                    onClick={() => router.push('/courses')}
-                                    endIcon={<FeaturedPlayListIcon />}
-                                >
-                                    Explore courses
-                                </Button>
 
             </Grid>
     )

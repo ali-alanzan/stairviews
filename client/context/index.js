@@ -40,40 +40,41 @@ const Provider = ({children}) => {
         // console.log('login');
     }, []);
     
-    axios.interceptors.response.use(function (response) {
-        // any status code that like within the range 2xx cause this function to trigger
-        return response;
-    }, function (error)  {
-        // any status code that false outside the range of 2xx cause this function to trigger
-        let res = error.response;
-        if (typeof(res.status) != undefined && res.status === 401 && res.config && !res.config.__isRetryRequest) {
-            return new Promise((resolve, reject) => {
-                axios.get('/api/logout')
-                .then( (data) => {
-                    // 
-                    // console.log('401 error > logout');
-                    dispatch({type: "LOGOUT"});
-                    window.localStorage.removeItem('user');
+    // axios.interceptors.response.use(function (response) {
+    //     // any status code that like within the range 2xx cause this function to trigger
+    //     return response;
+    // }, function (error)  {
+    //     // any status code that false outside the range of 2xx cause this function to trigger
+    //     console.log("123123123",error);
+    //     // let res = error.response;
+    //     // if (Object.keys(error).length > 0 && typeof(res.status) != undefined && res.status === 401 && res.config && !res.config.__isRetryRequest) {
+    //     //     return new Promise((resolve, reject) => {
+    //     //         axios.get('/api/logout')
+    //     //         .then( (data) => {
+    //     //             // 
+    //     //             // console.log('401 error > logout');
+    //     //             dispatch({type: "LOGOUT"});
+    //     //             window.localStorage.removeItem('user');
                     
-                    // router.push('/login');
-                    window.location.replace(window.location.origin+'/login?redirect_url='+window.location.href)
-                })
-                .catch( err => {
-                    // console.log('AXIOS INRTERCEPTORS ERR', err);
-                    reject(error);
-                });
-            });
-        }
+    //     //             // router.push('/login');
+    //     //             window.location.replace(window.location.origin+'/login?redirect_url='+window.location.href)
+    //     //         })
+    //     //         .catch( err => {
+    //     //             // console.log('AXIOS INRTERCEPTORS ERR', err);
+    //     //             reject(error);
+    //     //         });
+    //     //     });
+    //     // }
 
-        return  Promise.reject(error);
-    });
+    //     // return  Promise.reject(error);
+    // });
 
 
     useEffect(() => {
         const getCsrfToken = async () => {
-            const {data} = await axios.get('/api/csrf-token');
+            // const {data} = await axios.get('/api/csrf-token');
             // console.log('CSRF', data);
-            axios.defaults.headers['X-CSRF-Token'] = data.csrfToken;
+            // axios.defaults.headers['X-CSRF-Token'] = data.csrfToken;
             // console.log('CSRF', axios.defaults.headers);
         }
         getCsrfToken();

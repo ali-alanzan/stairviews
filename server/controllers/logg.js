@@ -1,4 +1,4 @@
-import { fetchJSON } from '../utills/helpers';
+import { fetchJSON } from '../../client/components/utills/helpers';
 
 
 const client_id = process.env.CLIENT_ID;

@@ -8,6 +8,7 @@ import { useTheme } from '@mui/styles';
 import Image from 'next/image'
 import ContinueToAccount from './ContinueToAccount';
 
+import YTRaise from  '../../../assets/sprout-social-social-youtube-monetization.svg';
 
 const handeGoBottom = (e) => {
     let offsetGo = 0;
@@ -68,7 +69,7 @@ const HomeHero = ({
                 
                 <Grid item>
                     <Image 
-                        src={Stairs.src}
+                        src={YTRaise.src}
                         width="343"
                         height="343"
                         alt={values.title}

@@ -51,7 +51,7 @@ app.get('/api/csrf-token', (req, res) => {
 // port
 const port = process.env.PORT || 8000;
 
-const wsServer = new WebSocketServer({ noServer: true });
+// const wsServer = new WebSocketServer({ noServer: true });
 
 
 
@@ -59,61 +59,61 @@ const wsServer = new WebSocketServer({ noServer: true });
 
 const sockets = [];
 
-wsServer.on("connection", (socket) => {
-    sockets.push(socket);
-    // setTimeout(async () => {
-    //   news = await mongoClient.db("test")
-    //   .collection("news")
-    //   .find({})
-    //   .sort({
-    //     metacritic: -1,
-    //   })
-    //   .map(({  title, slug, text, category, author, date }) => ({
-    //     title,
-    //     slug,
-    //     text,
-    //     category,
-    //     author,
-    //     date,
-    //   }))
-    //   .limit(100)
-    //   .toArray();
-    //   socket.send(JSON.stringify(news));
-    // }, 1000, socket, news);
-    socket.on("message", (data) => {
+// wsServer.on("connection", (socket) => {
+//     sockets.push(socket);
+//     // setTimeout(async () => {
+//     //   news = await mongoClient.db("test")
+//     //   .collection("news")
+//     //   .find({})
+//     //   .sort({
+//     //     metacritic: -1,
+//     //   })
+//     //   .map(({  title, slug, text, category, author, date }) => ({
+//     //     title,
+//     //     slug,
+//     //     text,
+//     //     category,
+//     //     author,
+//     //     date,
+//     //   }))
+//     //   .limit(100)
+//     //   .toArray();
+//     //   socket.send(JSON.stringify(news));
+//     // }, 1000, socket, news);
+//     socket.on("message", (data) => {
   
-    //   setTimeout(async () => {
-    //     news = await mongoClient.db("test")
-    //     .collection("news")
-    //     .find({})
-    //     .sort({
-    //       metacritic: -1,
-    //     })
-    //     .map(({  title, slug, text, category, author, date }) => ({
-    //       title,
-    //       slug,
-    //       text,
-    //       category,
-    //       author,
-    //       date,
-    //     }))
-    //     .limit(100)
-    //     .toArray();
-    //     for (const recipient of sockets) {
-    //       recipient.send(JSON.stringify([...news]));
-    //     }
-    //   }, 1000, socket, news);
-    recipient.send(JSON.stringify(["alitestsocket", true]));
-    });
-  });
+//     //   setTimeout(async () => {
+//     //     news = await mongoClient.db("test")
+//     //     .collection("news")
+//     //     .find({})
+//     //     .sort({
+//     //       metacritic: -1,
+//     //     })
+//     //     .map(({  title, slug, text, category, author, date }) => ({
+//     //       title,
+//     //       slug,
+//     //       text,
+//     //       category,
+//     //       author,
+//     //       date,
+//     //     }))
+//     //     .limit(100)
+//     //     .toArray();
+//     //     for (const recipient of sockets) {
+//     //       recipient.send(JSON.stringify([...news]));
+//     //     }
+//     //   }, 1000, socket, news);
+//     recipient.send(JSON.stringify(["alitestsocket", true]));
+//     });
+//   });
 
 const server = app.listen(port, () => {
     console.log(`Server is runinng on port ${port}`);
 
     server.on("upgrade", (req, socket, head) => {
-        wsServer.handleUpgrade(req, socket, head, (socket) => {
-            wsServer.emit("connection", socket, req);
-        });
+        // wsServer.handleUpgrade(req, socket, head, (socket) => {
+        //     wsServer.emit("connection", socket, req);
+        // });
     });
 });
 
