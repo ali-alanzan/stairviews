@@ -1,6 +1,5 @@
 import Hero from "../components/ui/Hero"
 import React, { useEffect, useState } from 'react';
-import UserRoute from '../components/routes/UserRoute';
 import {Context} from '../context';
 import {useRouter} from 'next/router';
 
@@ -41,6 +40,7 @@ const useStyles = (theme) => {
 export default function Register(props) {
     
     const theme = useTheme();
+    const  account = props.account;
 
     const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
     const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -51,8 +51,8 @@ export default function Register(props) {
 
 
 
-    const  {state, dispatch} = React.useContext(Context);
-    const {user} = state;
+    // const  {state, dispatch} = React.useContext(Context);
+    // const {user} = state;
 
     const [current, setCurrent] = useState(0);
     const [videos, setVideos] = useState([
@@ -63,15 +63,17 @@ export default function Register(props) {
     const [players, setPlayers] = useState([]);
 
     const listenToScrollArea = () => {
-        var area = document.querySelector("#slider-container-scrollarea");
-        area.setAttribute("current-watch", 0);
-        area.setAttribute("current-scroll", 0);
-        area.onscroll = function () {
-            var 
-            area = document.querySelector("#slider-container-scrollarea"),
-            c = Math.floor(area.scrollTop / area.children[1].clientHeight);
-            area.setAttribute("current-watch", c);
-            setCurrent(c);
+        window.onload = function () {
+            var area = document.querySelector("#slider-container-scrollarea");
+            area.setAttribute("current-watch", 0);
+            area.setAttribute("current-scroll", 0);
+            area.onscroll = function () {
+                var 
+                area = document.querySelector("#slider-container-scrollarea"),
+                c = Math.floor(area.scrollTop / area.children[1].clientHeight);
+                area.setAttribute("current-watch", c);
+                setCurrent(c);
+            }
         }
     }
     useEffect(() => {
@@ -115,13 +117,14 @@ export default function Register(props) {
     `;
 
     return(
-        <UserRoute>
-          <Script src="http://apis.google.com/js/platform.js"/>
+          <>
+<Script src="http://apis.google.com/js/platform.js"/>
                 <style>{style}</style>
         <Grid container
             // slider container
                 sx={{
-                    width: "100%",
+                    width: matchesSM ? "100%" : "60%",
+                    margin: matchesSM ? undefined : "0 auto !important",
                     height: "100vh",
                     marginTop: "10px !important",
                     overflowY: "scroll",
@@ -159,7 +162,6 @@ export default function Register(props) {
                 ))}
                
             </Grid>
-
-        </UserRoute>
+          </>
     )
 }

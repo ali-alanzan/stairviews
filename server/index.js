@@ -12,7 +12,7 @@ require("dotenv").config();
 
 
 
-const csrfProtection = csrf({cookie: true});
+// const csrfProtection = csrf({cookie: true});
 
 
 
@@ -23,7 +23,7 @@ const app = express();
 // apply middlewares
 app.use(cors())
 app.use(express.json({limit: "5mb"}));
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(morgan("dev"));
 app.use((req, res, next) => {
     // console.log("this is my own middleware");
@@ -42,11 +42,11 @@ mongoose.connect(process.env.DATABASE).then( () => console.log('**DB CONNECTED**
 readdirSync('./routes').map((r) => app.use('/api', require(`./routes/${r}`)));
 
 
-app.use(csrfProtection);
+// app.use(csrfProtection);
 
-app.get('/api/csrf-token', (req, res) => {
-    res.json({ csrfToken: req.csrfToken() });
-});
+// app.get('/api/csrf-token', (req, res) => {
+//     res.json({ csrfToken: req.csrfToken() });
+// });
 
 // port
 const port = process.env.PORT || 8000;

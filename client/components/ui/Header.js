@@ -120,28 +120,21 @@ const Header = (props) => {
     const classes = useStyles(theme);
     const iOS =
       typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-
     const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
-
-
     const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
-    
     const [openDrawer, setOpenDrawer] = React.useState(false);
-
     const [value, setValue] = [props.value, props.setValue];
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openMenu, setOpenMenu] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = [props.selectedIndex, props.setSelectedIndex];
-
-
-    const  {state, dispatch} = useContext(Context);
-    const { user } = state;
-
+    // const  {state, dispatch} = useContext(Context);
+    // const { user } = state;
+    const account = props.account;
+    
     const logout = async () => {
-        dispatch({
-            type: 'LOGOUT'
-        });
+        // dispatch({
+            // type: 'LOGOUT'
+        // });
         window.localStorage.removeItem('user');
         const {data} = await axios.get("/api/logout");
 
@@ -177,97 +170,41 @@ const Header = (props) => {
 
 
     let userActiveIndex = 0
-    const routes = [
-        {name: "Home", link: "/", activeIndex: userActiveIndex},
-        // {
-        //     name: "Services", link: "/services", activeIndex: 1,
-        //     ariaOwns: anchorEl ? "simple-menu" : undefined,
-        //     ariaPopup: anchorEl ? "true" : undefined,
-        //     mouseOver: event => handleClick(event)
-        // },
-        
-    ];
+    const routes = [];
 
-    const userSubMenuOptions = [
-        // {
-        //     name: "Services",
-        //     link: "/services",
-        //     activeIndex: 1,
-        //     selectedIndex: 0
-        // },
+    const userSubMenuOptions = [];
 
-
-    ];
-
-    routes.push(
-        {name: "Courses", link: "/courses", activeIndex: ++userActiveIndex},
-    );
-
-    if( user && user.role && user.role.includes("Instructor") ) {
+    if( account && account.google && account.email != undefined ) {
         routes.push(
-            {name: "Create Course", link: "/instructor/course/create", activeIndex: ++userActiveIndex},
-
-            {name: "Instructor", link: "/instructor", activeIndex: ++userActiveIndex},
-        );
-
-        userSubMenuOptions.push({
-            name: "Dashboard",
-            link: "/instructor/courses",
-            activeIndex: ++userActiveIndex,
-            selectedIndex: 0
-        });
-    } else {
-        routes.push(
-            {name: "About us", link: "/about-us", activeIndex: ++userActiveIndex},
-        );
-        
-        if(user != null) {
-            if(matchesSM) {
-                routes.push(
-                    {name: "Dashboard", link: "/user", activeIndex: ++userActiveIndex, 
-                    selectedIndex: 0
-                
-                    },
-                );
-            } else {
-                userSubMenuOptions.push(        {
-                    name: "Dashboard",
-                    link: "/user",
-                    activeIndex: ++userActiveIndex,
-                    selectedIndex: 0
-                });
-            }
-        }
-
-
-    }
-
-
-
-
- 
-
-
-    if ( user != null) {
-        
-        routes.push(
+            {name: "Home", link: "/", activeIndex: userActiveIndex},
+            {name: "My videos", link: "/my/videos", activeIndex: ++userActiveIndex},
+            {name: "Watch", link: "/watch", activeIndex: ++userActiveIndex, 
+                icon: <LocalCafeOutlinedIcon fontSize="small" />
+            },
+            {name: "MY", link: "/my", activeIndex: ++userActiveIndex},
             {
-                name: user && user.name, link: "#logout", activeIndex: ++userActiveIndex,
-                ariaOwns: anchorEl ? "logout-submenu" : undefined,
-                ariaPopup: anchorEl ? "true" : undefined,
+                name: "Logout", link: "#logout", activeIndex: ++userActiveIndex,
                 mouseOver: event => handleClick(event),
                 click: event => handleClick(event),
-                icon: <LocalCafeOutlinedIcon fontSize="small" />
+                // icon: <LocalCafeOutlinedIcon fontSize="small" />
             }
         );
 
+
+        // {
+        //     name: user && user.name, link: "#logout", activeIndex: ++userActiveIndex,
+        //     ariaOwns: anchorEl ? "logout-submenu" : undefined,
+        //     ariaPopup: anchorEl ? "true" : undefined,
+        //     mouseOver: event => handleClick(event),
+        //     click: event => handleClick(event),
+        //     icon: <LocalCafeOutlinedIcon fontSize="small" />
+        // }
     } else {
         routes.push(
-            {name: "Login", link: "/login", activeIndex: ++userActiveIndex},
-            {name: "Register", link: "/register", activeIndex: ++userActiveIndex},
-        )
+            {name: "Home", link: "/", activeIndex: ++userActiveIndex},
+            {name: "About us", link: "/about-us", activeIndex: ++userActiveIndex}
+        );
     }
-
 
     React.useEffect(() => {
         const pathName = window.location.pathname;
@@ -279,7 +216,6 @@ const Header = (props) => {
                         setValue(route.activeIndex)
                         if(route.selectedIndex && route.selectedIndex !==  selectedIndex) {
                             setSelectedIndex(route.selectedIndex);
-                            
                         }
                     }
                     break;
@@ -297,7 +233,7 @@ const Header = (props) => {
     const tabs = (
         <React.Fragment>
             <Tabs
-            value={value} 
+            value={value < routes.length ? value : 0} 
             onChange={handleChange} 
             indicatorColor="secondary"
             textColor="inherit"

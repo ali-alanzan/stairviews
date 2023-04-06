@@ -1,4 +1,6 @@
 import * as React from 'react';
+// import  from 'react'; 
+import { Context } from '../context';
 import Header from "../components/ui/Header";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,8 +12,11 @@ import "react-toastify/dist/ReactToastify.css";
 import {Provider} from '../context';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Head from 'next/head';
-import { fetchJSON } from '../components/utills/helpers';
+import { fetchJSON , getCookie} from '../components/utills/helpers';
+
 import { appWithTranslation } from 'next-i18next';
+import { toast } from 'react-toastify';
+import axios from "axios";
 
 const theme = createTheme({
     // breakpoints: {
@@ -37,35 +42,34 @@ function MyApp({ Component, pageProps }) {
     const [title, setTitle] = React.useState("Stairviews");
     const [documentLoading, setDocumentLoading] = React.useState(true);
     const [ws, setWs] = React.useState();
+    const [loaded, setLoaded] = React.useState(false);
 
     const [account, setAccount] = React.useState({});
     const dataGoogleAccount = async () => {
-      const data = await fetchJSON("/api/logingoogle");
+      console.log(getCookie("access_token"));
+      const data = await fetchJSON("/api/logingoogle?token="+getCookie("access_token"));
       return data;
     };
-
+    // const  {state, dispatch} =  React.useContext(Context);
     React.useEffect(async () => {
-      if(document!=undefined) {
-        window.onload = function () {
-          setDocumentLoading(false)
-        }
+      if(window != undefined && window != {} && window != null && typeof(window.document) && window.document != undefined) {
+          setLoaded(true);
+      } else {
+        return <></>;
       }
-
-      dataGoogleAccount().then((data) => setAccount({...data, google: true})).catch((err) => {
+      await dataGoogleAccount()
+      .then((res) => {
+        const retrivedAccount = res.data;
+        setAccount({...retrivedAccount, google: true});
+      }).catch((err) => {
         console.log(err);
+        toast("False Error login process, please try again");
       });
-      console.log(account);
-      // const ws = new WebSocket(window.location.origin.replace(/^http/, "ws"));
-  
-      // ws.onmessage = (event) => {
-        // console.log(event.data);
-        // console.log(event.data);
-      // };
-      // setWs(ws);
-
-      console.log(account);
+      
     }, []);
-
+  if(!loaded) {
+    return <></>
+  }
 
 
   return (
@@ -73,17 +77,20 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>{title}</title>
       </Head>
-
       <Provider>
           <CssBaseline enableColorScheme/>
           <GlobalStyles styles={{ ...styles }} />
           <ThemeProvider theme={theme}>
                 <ToastContainer position="top-center" />
-                <Header  setValue={setValue} setSelectedIndex={setSelectedIndex} value={value} selectedIndex={selectedIndex} />
-
-              <Component {...pageProps} documentLoading={documentLoading} setDocumentLoading={setDocumentLoading} />
+                <Header account={account} setValue={setValue} setSelectedIndex={setSelectedIndex} value={value} selectedIndex={selectedIndex} />
+              <Component {...pageProps} account={account} />
           </ThemeProvider>
       </Provider>
+        // ...
+        {/* <SubscriberForm/> */}
+        // ...
+        {/* <MyDriveComponent/> */}
+        // ...
     </React.StrictMode>
   );
 }

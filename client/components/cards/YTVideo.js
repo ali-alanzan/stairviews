@@ -51,7 +51,8 @@ const YTVideo = ({videoId, current, loop, players, setPlayers}) => {
       // console.log(currentArea, players,  players[currentArea], player);
       // players[currentArea].playVideo();
       // console.log(typeof(players[currentArea].playVideo) == "function");
-      if( typeof(players[currentArea].playVideo) == "function" ) {
+      // console.log(typeof(players[currentArea].playVideo))
+      if( typeof(players[currentArea].playVideo) != undefined && typeof(players[currentArea].playVideo) == "function" ) {
       // document.querySelector('.currentPlay[value="true"]').parentElement().querySelector("iframe");
         players[currentArea].playVideo();
       }

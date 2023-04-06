@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import HomeHeroCards from '../components/cards/HomeHeroCards';
 import VrSectionStory from '../components/ui/HomeSection/VrSectionStory';
 import MultiAccountSection from '../components/ui/HomeSection/MultiAccountSection';
@@ -12,30 +13,32 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 
 
-const Index = ({courses, documentLoading}) => {
+const Index = ({account}) => {
+    const router = useRouter();
 
-    console.log(documentLoading)
-    
+    console.log(account);
+    if(account && account.email && account.google) {
+        router.push("/watch");
+    }
     return (
         <>
-
-        <HomeHero              documentLoading={documentLoading} />
         
+        {account && account.email && account.google ? <>
+        
+
+
+    </> : <>
+
+        <HomeHero />
+
         <HomeHeroCards         />
 
 
-        
-        
-        <VrSectionStory        />  
-        <MultiAccountSection   />
-
-        <BuildYourFuture />
-
-        <JoinNowArea />
+    </>}
 
 
-        <Footer />
-    </>
+    <Footer />
+        </>
     )
 };
 

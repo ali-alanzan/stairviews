@@ -20,7 +20,7 @@ const stylesIcons = {
 
 const HomeHeroCards = ({
     
-    }) => {
+    }) => { 
         const { t } = useTranslation('home');
 
         const theme = useTheme();

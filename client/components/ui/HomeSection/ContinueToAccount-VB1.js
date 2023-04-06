@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
 import continueAccounts from '../../../assets/google-logo-transparent.png'
 import { Button } from '@mui/material';
@@ -13,8 +13,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 import { fetchJSON } from '../../utills/helpers';
 import axios from 'axios';
-import Script from 'next/script';
-import { getPanelId } from '@mui/base';
 
 const ContinueToAccount = ({documentLoading}) => {
 
@@ -29,61 +27,8 @@ const ContinueToAccount = ({documentLoading}) => {
         const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
         const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
         
-
-
-
-        const authenticate =() => {
-
-            return gapi.auth2.getAuthInstance()
-                    .signIn({
-                        scope: 'https://www.googleapis.com/auth/youtube.force-ssl'
-                    })
-                    .then(function () {
-                        console.log("sign in successful")
-                    })
-        }
-
-
-
-
         // console.log(process.env.CLIENT_GOOGLE_ID);
-        const loadWindowCheck = () => {
-            // console.log(typeof(window), window);
-            // window.onload = function() {
-                // console.log("loaded");
-            // }
-            // if(typeof(window) != {} && window != {}) {
-                // gapi.load();
-                // console.log("asd", gapi);
-
-            // }
-            if(window != {}) {
-                setTimeout(function () {
-                    // console.log("load",  window.document, window.location);
-                    loadClientAuth2Client1();
-                }, 1000);
-            }
-        }
-
-        const loadClientAuth2Client1 = () => {
-            getPanelId.load("client:auth2", function () {
-                gapi.auth2.init({
-                    client_id: process.env.CLIENT_ID
-                })
-            })
-        }
-
-
-        const handleLoginB2 = () => {
-
-        }
-        useEffect(() => {
-            loadWindowCheck();
-        }, [window]);
-
-
-
-
+    
         async function handleStartLogin() {
 
             const {data} = await axios.get(`/api/joingoogle`);
@@ -126,38 +71,36 @@ const ContinueToAccount = ({documentLoading}) => {
 
         }
 
-        
 
-        
     return (
-            <>
-            <Script src="https://apis.google.com/js/api.js" />
-                <Grid
-                container
-                    sx={{
-                        maxWidth: '100%',
-                        justifyContent: "center",
-                        alignItems: "end",
-                        height: "100%"
-                    }}
-                    direction="column"
-                >
+            <Grid
+            container
+                sx={{
+                    maxWidth: '100%',
+                    justifyContent: "center",
+                    alignItems: "end",
+                    height: "100%"
+                }}
+                direction="column"
+            >
 
-                                
-                    <Button variant="contained"  
-                        color="secondary" 
-                        sx={{
-                            ...classes.button,
-                            backgroundColor: "#fff",
-                            color: "#000"
-                        }} 
-                        onClick={() => authenticate().then(loadClient)}
-                        endIcon={<GoogleIcon />}
-                    >
-                        Continue with Google
-                    </Button>
-                </Grid>
-            </>
+                           
+<Button variant="contained"  
+                                    color="secondary" 
+                                    sx={{
+                                        ...classes.button,
+                                        backgroundColor: "#fff",
+                                        color: "#000"
+                                    }} 
+                                    onClick={handleStartLogin}
+                                    endIcon={<GoogleIcon />}
+                                >
+                                    Continue with Google
+                                </Button>
+                               
+
+
+            </Grid>
     )
 }
 

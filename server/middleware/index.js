@@ -1,12 +1,38 @@
 import expressJwt from 'express-jwt';
 import Course from '../models/course';
 import User from '../models/user';
+import { comparePassword } from '../utills/auth';
 
 export const requireSignIn = expressJwt({
     getToken: (req, res) => req.cookies.token,
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"]
 });
+
+
+export const requireGoogleAuthClientToServer = async (req, res, next) => {
+    try {
+
+        const account = req.query.account != undefined  ? JSON.parse(req.query.account) : req.body.account;
+        console.log('account', account);
+    
+        const user = await User.findOne({email: account.email}).exec();
+        // console.log('user', user);
+        // let userExist = await User.findOne({email}).exec();
+        const match = await comparePassword(account.password, user.password);
+        
+        if(user == null || !match) {
+            return res.sendStatus(403);
+        } else {
+            next();
+        }
+
+    } catch(err) {
+        // console.log(err);
+        return res.status(403).send("Login Invalid");
+    }
+    
+}
 
 export const isInstructor = async (req, res, next) => {
     try {
