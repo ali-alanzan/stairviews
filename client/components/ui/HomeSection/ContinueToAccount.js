@@ -40,9 +40,24 @@ const ContinueToAccount = ({documentLoading}) => {
                     })
                     .then(function () {
                         console.log("sign in successful")
-                    })
+                    }, function (err) {
+                        console.log(err)
+                    });
         }
 
+
+        const loadClient = () => {
+            gapi.client.setApiKey(process.env.API_KEY);
+
+            return gapi
+                .client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+                    .then(function () {
+                        console.log("GAPI client loaded successfully"); // -- done
+                    }, function (err) {
+                        console.log(err);
+                    });
+            
+        }
 
 
 
@@ -66,7 +81,7 @@ const ContinueToAccount = ({documentLoading}) => {
         }
 
         const loadClientAuth2Client1 = () => {
-            getPanelId.load("client:auth2", function () {
+            gapi.load("client:auth2", function () {
                 gapi.auth2.init({
                     client_id: process.env.CLIENT_ID
                 })
