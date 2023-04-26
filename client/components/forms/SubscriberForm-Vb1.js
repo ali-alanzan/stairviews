@@ -5,14 +5,14 @@ import {useGoogleApi } from 'react-gapi'
 
 const SubscriberForm = () => {
    
-    // const gapi = useGoogleApi({
-    //     scopes: [
-    //       'profile',
-    //     ],
-    //   });
-    //   console.log(gapi);
+    const gapi = useGoogleApi({
+        scopes: [
+          'profile',
+        ],
+      });
+      console.log(gapi);
     
-    //   const auth = gapi?.auth2.getAuthInstance()
+      const auth = gapi?.auth2.getAuthInstance()
 
       // gapi.auth.authorize(
       //   {
@@ -32,9 +32,13 @@ const SubscriberForm = () => {
       // gapi.client.Myendpoint.MyEndpointMethod().execute(function (resp) {
       //   console.log(resp);
       // });
-      return (<>
-        
-      </>)
+      return <div>{
+          !auth
+            ? <span>Loading...</span>
+            : auth?.isSignedIn.get()
+              ? `Logged in as "${auth.currentUser.get().getBasicProfile().getName()}"`
+              : <button onClick={() => auth.signIn()}>Login</button>
+        }</div>
 }
 
 

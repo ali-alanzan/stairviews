@@ -16,10 +16,10 @@ export const joinGoogle = async (req, res) => {
   const parameters = {
     response_type: "token",
     client_id,
-    scope: "email profile",
+    scope: "email profile https://www.googleapis.com/auth/youtube",
     redirect_uri: client_url + "/login/callback",
   };
-
+  // https://www.googleapis.com/auth/youtube.force-ssl
   // console.log(authorization_endpoint, parameters);
   res.json(parameters);
 }
@@ -104,4 +104,36 @@ export const logout = async (req, res) => {
     const logout = await fetchJSON('https://www.google.com/accounts/Logout');
     res.cookie("access_token", null, { signed: false });
     res.sendStatus(200);
+};
+
+
+export const subscriptionInfo = async (req, res) => {
+  const access_token  = req.query.token.trim();
+  const subscribe_endpoints = await fetchJSON(
+    "https://youtube.googleapis.com/youtube/v3/subscriptions"
+  );
+  // console.log(access_token);
+
+  if(access_token) {
+    try {
+      await fetchJSON(userinfo_endpoint, {
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+        },
+      })
+      .then((response) => {
+        if(response.data != undefined) {
+          userinfo = response.data;
+        }
+        console.log("then response "+response);
+      });
+
+   
+    } catch(err) {
+      userinfo = {}
+      console.log("err", err);
+    }
+  }
+
+  res.json(userinfo);
 };
