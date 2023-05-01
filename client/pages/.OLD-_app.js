@@ -18,7 +18,6 @@ import { appWithTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import axios from "axios";
 
-
 const theme = createTheme({
     // breakpoints: {
     //   values: {

@@ -10,6 +10,7 @@ import JoinNowArea from '../components/ui/HomeSection/JoinNowArea';
 import HomeHero from '../components/ui/HomeSection/HomeHero';
 import Footer from '../components/ui/Footer';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// import * as serviceWorker from '../components/newints/serviceWorker';
 
 
 
@@ -41,6 +42,9 @@ const Index = ({account}) => {
         </>
     )
 };
+
+
+
 
 // export async function getServerSideProps() {
 //     const {data} = await axios.get(`${process.env.API}/courses`);

@@ -6,7 +6,7 @@ const router = express.Router();
 
 // controllers
 // import {register, login, logout, currentUser, forgetPassword, resetPassword}  from "../controllers/auth";
-import {loginGoogle, loginGoogleinfo, joinGoogle, subscriptionInfo}  from "../controllers/logg";
+import {loginGoogle, loginGoogleinfo, joinGoogle, subscriptionInsert}  from "../controllers/logg";
 import {login, logout}  from "../controllers/auth";
 
 // middleware
@@ -18,7 +18,7 @@ import {requireSignIn} from '../middleware';
 router.post('/logingoogle', loginGoogle);
 router.get('/joingoogle', joinGoogle);
 router.get('/logingoogle', loginGoogleinfo);
-router.post("/subscriptionInfo", subscriptionInfo);
+router.post("/subscription-insert", subscriptionInsert);
 
 
 router.post('/login', login);

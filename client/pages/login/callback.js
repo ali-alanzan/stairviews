@@ -34,20 +34,6 @@ const LoginCallback = () => {
             setError(`Failed ${res.status} ${res.statusText}`);
           }
         }
-        // const res = await fetch("/api/logingoogle", {
-        //   method: "POST",
-        //   headers: {
-        //     "content-type": "application/json",
-        //   },
-        //   body: JSON.stringify({ access_token }),
-        // });
-        // console.log(res)
-        // if (res.ok) {
-        //   window.location.replace(window.location.origin);
-        // } else {
-        //   setError(`Failed ${res.status} ${res.statusText}`);
-        // }
-        // location.replace("/");
       });
       
 

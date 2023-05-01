@@ -107,33 +107,42 @@ export const logout = async (req, res) => {
 };
 
 
-export const subscriptionInfo = async (req, res) => {
-  const access_token  = req.query.token.trim();
-  const subscribe_endpoints = await fetchJSON(
-    "https://youtube.googleapis.com/youtube/v3/subscriptions"
-  );
+export const subscriptionInsert = async (req, res) => {
+  const access_token  = req.body.token.trim();
+  let responseInfo = {};
+  const subscribe_endpoint = "https://youtube.googleapis.com/youtube/v3/subscriptions";
+  const options = {
+    
+  };
   // console.log(access_token);
 
   if(access_token) {
     try {
-      await fetchJSON(userinfo_endpoint, {
+      await fetchJSON(subscribe_endpoint, {
         headers: {
           'Authorization': `Bearer ${access_token}`,
         },
+        parameters: {
+          key: process.env.API_KEY,
+          part: ["id","snippet"],
+          channelId: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+          access_token: access_token
+        }
       })
       .then((response) => {
         if(response.data != undefined) {
-          userinfo = response.data;
+          responseInfo = response.data;
         }
         console.log("then response "+response);
       });
 
    
     } catch(err) {
-      userinfo = {}
-      console.log("err", err);
+      responseInfo = err;//{}
+      console.log(err);
+      // console.log("err", err);
     }
   }
 
-  res.json(userinfo);
+  res.json(responseInfo);
 };

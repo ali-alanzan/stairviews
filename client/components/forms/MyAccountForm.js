@@ -189,7 +189,7 @@ Example of Youtube video URL: <a target="_blank" href="https://www.youtube.com/c
                 padding: "0 20px"
             }}
         >
-            <YTChannelCard />
+            {/* <YTChannelCard /> */}
         </Grid>
     </Grid>);
 

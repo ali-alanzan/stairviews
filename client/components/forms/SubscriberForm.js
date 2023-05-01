@@ -1,40 +1,39 @@
 import React, { useEffect } from 'react';
-
+import axios from 'axios';
 import {useGoogleApi } from 'react-gapi'
 
+import { Button } from '@mui/material';
+import { fetchJSON , getCookie} from '../utills/helpers';
 
 const SubscriberForm = () => {
-   
-    // const gapi = useGoogleApi({
-    //     scopes: [
-    //       'profile',
-    //     ],
-    //   });
-    //   console.log(gapi);
-    
-    //   const auth = gapi?.auth2.getAuthInstance()
+  const token = getCookie("access_token");
+  const handleEventSubscribeApi = async () => {
+    console.log(getCookie("access_token"));
+    const form_data = {
+      token
+    };
 
-      // gapi.auth.authorize(
-      //   {
-      //     'client_id': process.env.CLIENT_ID,
-      //     'scope': SOMESCOPE,
-      //     'authuser': -1,
-      //     'prompt': 'select_account'
-      //   },
-      //   function (authResult) {
-      //       console.log(authResult);
-      //   }
-      // )
-      // gapi.auth.authorize({
-      //   'client_id': 'myID',
-      //   scope: 'email', immediate: true
-      // },getAuthStatus);
-      // gapi.client.Myendpoint.MyEndpointMethod().execute(function (resp) {
-      //   console.log(resp);
-      // });
-      return (<>
-        
-      </>)
+    await axios.post('/api/subscription-insert', form_data).then(response => {
+      console.log("response", response);
+    }).catch(error => {
+      console.log("error", error);
+    });
+    
+  }
+
+
+  return (<>
+    <Button variant="contained" component="span" 
+        sx={{
+            backgroundColor: "#27b044",
+            width: '80%',
+            margin: "0 10px"
+        }}
+        onClick={handleEventSubscribeApi}
+        >
+        Add video
+    </Button>
+  </>);
 }
 
 

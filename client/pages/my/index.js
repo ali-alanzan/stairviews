@@ -59,7 +59,7 @@ const Index = (props) => {
                 setMyVideos(data);
             }
         }
-    },  [account]);
+    },  [account]);    
 
     return (
         <Grid  container
