@@ -1,9 +1,9 @@
-import User from '../models/user'
+import Profile from '../models/profile';
+import Session from '../models/session';
 import { hashPassword, comparePassword } from '../utills/auth';
 import jwt from 'jsonwebtoken';
 import AWS from 'aws-sdk';
 import { nanoid } from 'nanoid'
-
 
 const awsConfig = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -12,7 +12,69 @@ const awsConfig = {
     apiVersion: process.env.AWS_API_VERSION
 };
 
-const SES = new AWS.SES(awsConfig);
+const SES = new AWS.SES(awsConfig); 
+
+
+export const addUserSession = async (req, res) => {
+    const ip = req.socket.remoteAddress ? req.socket.remoteAddress : req.ip;
+
+    try {  
+        const { name, email, image, information, userAgent } = req.body;
+        if (!name || !email || Object.keys(information).length <= 0) return res.status(400).send("Sessin is required")
+        // check if our db has user with that email
+        let profile = await Profile.findOne({email}).exec();
+
+        // create signed jwt
+        const token = jwt.sign(
+            {
+                _id: profile._id
+            },
+            process.env.JWT_SECRET,
+            {expiresIn: '7d'}
+        );
+        
+        if(!profile) {
+            // register 
+            profile = new Profile({
+                name, email, image, information, token
+            });
+            await profile.save();
+        }
+
+        console.log(profile);
+        // Profile
+        // name, email, image, information, date, time
+
+        const session_data = {
+            user: profile._id,
+            email,
+            token,
+            information,
+            userAgent,
+            ip
+        };
+        const session = new Session({
+            ...session_data
+        });
+        session.save();
+        
+        const userSessions = profile.sessions;
+        userSessions.push([session._id]);
+        const profileUpdate = Profile.findOneAndUpdate({
+            email,
+        }, {
+            userSessions,
+            token
+        }).exec();
+
+
+        return res.json({ok: true, session: session._id, token: token, user: profile._id});
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+
 
 
 export const register = async (req, res) => {

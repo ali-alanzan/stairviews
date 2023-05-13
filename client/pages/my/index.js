@@ -71,9 +71,6 @@ const Index = (props) => {
                 width: "40%"
             }}>
                 <MyAccountForm />
-                <GoogleApiProvider clientId={process.env.CLIENT_ID}>
-                    <SubscriberForm />
-                </GoogleApiProvider>
             </Grid>
             <Grid item sx={{
                 maxWidth: "60%",

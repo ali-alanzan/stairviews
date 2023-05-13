@@ -8,19 +8,16 @@ import { useTheme } from '@mui/styles';
 import MyVideoCard from "../../components/cards/MyVideoCard";
 
 
-const Videos = (props) => {
+const Videos = ({account, handleEventUnSubscribeApi, handleEventSubscribeApi}) => {
     const router = useRouter();
-    const [values, setValues] = useState({});
-    const account = props.account;
+    const [values, setValues] = useState({});    
     const [image, setImage] = useState({});
-
     const [preview, setPreview] = useState(false);
     const [uploadButtonText, setUploadButtonText] = useState("Upload Image");
     const [myVideos, setMyVideos] = useState([]);
-
     const theme = useTheme();
     const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
-
+    
     const handleChange = (e) => {
        
         setValues({ ...values, [e.target.name]: e.target.value })
@@ -93,7 +90,8 @@ const Videos = (props) => {
                     updateVideoCards={updateVideoCards}
                     myVideos={myVideos}
                     setMyVideos={setMyVideos}
-
+                    handleEventUnSubscribeApi={handleEventUnSubscribeApi}
+                    handleEventSubscribeApi={handleEventSubscribeApi}
                 />
             </Grid>
             <Grid item sx={{

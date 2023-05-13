@@ -8,12 +8,13 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import {toast} from 'react-toastify';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
+import SubscriberForm from './SubscriberForm';
 
 const Input = styled('input')({
     display: 'none',
 });
   
-const AddVideoForm = ({account, updateVideoCards, myVideos, setMyVideos}) => { 
+const AddVideoForm = ({account, updateVideoCards, myVideos, setMyVideos,  handleEventUnSubscribeApi, handleEventSubscribeApi}) => { 
     const [addedVideoId, setAddedVideoId] = useState("");
     const [addedVideoURL, setAddedVideoURL] = useState("");
     const [addedVideoBtn, setAddedVideoBtn] = useState(false);
@@ -60,7 +61,7 @@ const AddVideoForm = ({account, updateVideoCards, myVideos, setMyVideos}) => {
             account
         };
 
-         
+
         await axios.post('/api/add-video', form_data).then(response => {
             setVideoAdded(response.data);
             const myPrevVideos = myVideos;
@@ -74,7 +75,7 @@ const AddVideoForm = ({account, updateVideoCards, myVideos, setMyVideos}) => {
                 setVideoAdded({0:1});
             }
             toast.error(error.response.data);
-        });;
+        });
         
         // updateVideoCards();
         // console.log(form_data, data);
@@ -179,7 +180,6 @@ const AddVideoForm = ({account, updateVideoCards, myVideos, setMyVideos}) => {
                 
             </form>
         </Grid>
-
         <Grid item
             sx={{
                 padding: "0 20px"

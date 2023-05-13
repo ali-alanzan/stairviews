@@ -4,34 +4,36 @@ import {useGoogleApi } from 'react-gapi'
 
 import { Button } from '@mui/material';
 import { fetchJSON , getCookie} from '../utills/helpers';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import { toast } from 'react-toastify';
 
-const SubscriberForm = () => {
-  const token = getCookie("access_token");
-  const handleEventSubscribeApi = async () => {
-    console.log(getCookie("access_token"));
-    const form_data = {
-      token
-    };
 
-    await axios.post('/api/subscription-insert', form_data).then(response => {
-      console.log("response", response);
-    }).catch(error => {
-      console.log("error", error);
-    });
-    
+const SubscriberForm = ({id, handleEventUnSubscribeApi, handleEventSubscribeApi}) => {
+  // const [subscribed, setSubscribed] = React.useState(!id ? false : true);
+  const [subscribed, setSubscribed] = React.useState(true);
+
+
+
+  if(!id) {
+    return <></>;
   }
 
-
   return (<>
-    <Button variant="contained" component="span" 
+  {id}
+    <Button variant="contained" component="button" 
         sx={{
-            backgroundColor: "#27b044",
-            width: '80%',
-            margin: "0 10px"
+            backgroundColor: subscribed ? "gray": "#FF0000",
+            padding: "3px 25px",
+            margin: "0 10px",
+            borderRadius: "20px 0 0 20px"
         }}
-        onClick={handleEventSubscribeApi}
+        onClick={subscribed ? handleEventUnSubscribeApi : handleEventSubscribeApi}
+        endIcon={<YouTubeIcon /> }
+        id="channel-btn"
+        data-channelid={id}
         >
-        Add video
+          {}
+        {subscribed ? "UnSubscribe" : "Subscribe"}
     </Button>
   </>);
 }

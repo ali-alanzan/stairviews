@@ -26,7 +26,9 @@ const handeGoBottom = (e) => {
 }
 
 const HomeHero = ({   
-    documentLoading 
+    setSession ,
+    setStage,
+    setSigned
     }) => {
 
         const [values, setValues] = useState({
@@ -55,7 +57,11 @@ const HomeHero = ({
             
         
                 <Grid item >
-                    <ContinueToAccount  />
+                    <ContinueToAccount 
+                        setSession={setSession} 
+                        setStage={setStage} 
+                        setSigned={setSigned} 
+                    />
                 </Grid>
                 <Grid item>
                     <Image 

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
 import continueAccounts from '../../../assets/google-logo-transparent.png'
 import { Button } from '@mui/material';
@@ -13,8 +13,9 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 import { fetchJSON } from '../../utills/helpers';
 import axios from 'axios';
+import {Context} from '../../../context';
 
-const ContinueToAccount = ({documentLoading}) => {
+const ContinueToAccount = ({setSigned, setSession, setStage}) => {
 
         const router = useRouter();
       
@@ -28,7 +29,61 @@ const ContinueToAccount = ({documentLoading}) => {
         const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
         
         // console.log(process.env.CLIENT_GOOGLE_ID);
-    
+        const  {state, dispatch} = useContext(Context);
+
+        function authenticate() {
+            
+            // var userAgent = window.navigator.userAgent;
+            // var req = new XMLHttpRequest();
+           
+            // // req.open("GET", "https://api.ipify.org/?format=json");
+            // // req.send();
+            return gapi.auth2.getAuthInstance()
+                .signIn({
+                    scope: 'email profile https://www.googleapis.com/auth/youtube.force-ssl',
+                    prompt: "consent"
+                })
+                .then(async () => {
+                    // document.getElementById("block").innerHTML = '';
+                    // console.log("Sign In Successful");
+                    // console.log("logged-gapi", gapi);
+                    const auth2 = gapi.auth2.getAuthInstance(),
+                    profile = auth2.currentUser.get().getBasicProfile();
+                    const user_data = {
+                        name: profile.getName(), 
+                        email: profile.getEmail(),
+                        image: profile.getImageUrl(),
+                        information: profile,
+                        userAgent: window.navigator.userAgent
+                    };
+                    const {data} = await axios.post(`/api/user-session`, user_data);
+                    // setStage("watch");
+                    // setSigned(true);
+                    // setSession(data);
+                    // console.log(profile, profile.information);
+                    window.localStorage.user = data;
+                    await Promise.resolve(() => {
+                        setTimeout(function () {
+                            router.push("/watch")
+                        }, 1000);
+                    });
+                }, function (err) {
+                    console.log(err)
+                });
+        }
+      
+        function loadClient() {
+            gapi.client.setApiKey("AIzaSyCwvthN0ls7sUwts6BgeeG3P1Zlq5wLoko")
+
+            return gapi.client
+             .load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+             .then(function () {
+                console.log("GAPI client loaded successfully");
+             }, function (err) {
+                console.log(err)
+             });
+        }
+
         async function handleStartLogin() {
 
             const {data} = await axios.get(`/api/joingoogle`);
@@ -82,21 +137,22 @@ const ContinueToAccount = ({documentLoading}) => {
                     height: "100%"
                 }}
                 direction="column"
+                id="block"
             >
 
                            
-<Button variant="contained"  
-                                    color="secondary" 
-                                    sx={{
-                                        ...classes.button,
-                                        backgroundColor: "#fff",
-                                        color: "#000"
-                                    }} 
-                                    onClick={handleStartLogin}
-                                    endIcon={<GoogleIcon />}
-                                >
-                                    Continue with Google
-                                </Button>
+                <Button variant="contained"  
+                    color="secondary" 
+                    sx={{
+                        ...classes.button,
+                        backgroundColor: "#fff",
+                        color: "#000"
+                    }} 
+                    onClick={() => authenticate().then(loadClient)}
+                    endIcon={<GoogleIcon />}
+                >
+                    Continue with Google
+                </Button>
                                
 
 

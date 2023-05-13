@@ -1,12 +1,12 @@
-import Hero from "../components/ui/Hero"
+import Hero from "../ui/Hero"
 import React, { useEffect, useState } from 'react';
-import {Context} from '../context';
+import {Context} from '../../context';
 import {useRouter} from 'next/router';
 
 import axios from 'axios';
 import {toast} from 'react-toastify';
 
-import YTVideo from "../components/cards/YTVideo";
+import YTVideo from "../cards/YTVideo";
 import { useTheme } from '@mui/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -35,12 +35,13 @@ const useStyles = (theme) => {
 };
 
 
-
-
-export default function Watch(props) {
+const WatchComponent = ({
+    handleEventUnSubscribeApi,
+    handleEventSubscribeApi,
+    setSession
+}) => {
     
     const theme = useTheme();
-    const  account = props.account;
 
     const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
     const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
@@ -117,52 +118,54 @@ export default function Watch(props) {
     `;
 
     return(
-          <>
-        {/* Scrolling video script loading */}
-        <Script src="http://apis.google.com/js/platform.js"/>
-        <style>{style}</style>
-        <Grid container
-            // slider container
-            sx={{
-                width: matchesSM ? "100%" : "60%",
-                margin: matchesSM ? undefined : "0 auto !important",
-                height: "100vh",
-                marginTop: "10px !important",
-                overflowY: "scroll",
-                scrollSnapType: "y mandatory",
-                scrollBehavior: "smooth",
-                overflowStyle: "none"    
-            }}
-            id="slider-container-scrollarea"
-        > 
-        
+        <>
+            {/* Scrolling video script loading */}
+            <Script src="http://apis.google.com/js/platform.js"/>
+            <style>{style}</style>
+            <Grid container
+                // slider container
+                sx={{
+                    width: matchesSM ? "100%" : "60%",
+                    margin: matchesSM ? undefined : "0 auto !important",
+                    height: "100vh",
+                    marginTop: "10px !important",
+                    overflowY: "scroll",
+                    scrollSnapType: "y mandatory",
+                    scrollBehavior: "smooth",
+                    overflowStyle: "none"    
+                }}
+                id="slider-container-scrollarea"
+            > 
+            
 
-            {videos.map((video, i) => (
-                <Grid container 
-                    key={i}
-                    sx={{
-                        height: "100%",
-                        width: "100%",
-                        margin: "0 auto",
-                        scrollSnapAlign: "start",
-                        position: "relative",
-                        border: "1px solid transparent",
-                    }}
-                >
-                    <Grid sx={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                        display: "flex",
-                        width:"100%",
-                        height: "100%",
+                {videos.map((video, i) => (
+                    <Grid container 
+                        key={i}
+                        sx={{
+                            height: "100%",
+                            width: "100%",
+                            margin: "0 auto",
+                            scrollSnapAlign: "start",
+                            position: "relative",
+                            border: "1px solid transparent",
                         }}
                     >
-                        <YTVideo videoId={video.videoId} loop={i} players={players} setPlayers={setPlayers} current={current} setCurrent={setCurrent} />
+                        <Grid sx={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            display: "flex",
+                            width:"100%",
+                            height: "100%",
+                            }}
+                        >
+                            <YTVideo videoId={video.videoId} loop={i} players={players} setPlayers={setPlayers} current={current} setCurrent={setCurrent} />
+                        </Grid>
                     </Grid>
-                </Grid>
-            ))}
-            
-        </Grid>
-          </>
+                ))}
+                
+            </Grid>
+        </>
     )
 }
+
+export default WatchComponent;

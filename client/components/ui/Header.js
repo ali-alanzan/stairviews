@@ -129,7 +129,7 @@ const Header = (props) => {
     const [selectedIndex, setSelectedIndex] = [props.selectedIndex, props.setSelectedIndex];
     // const  {state, dispatch} = useContext(Context);
     // const { user } = state;
-    const account = props.account;
+    const [account, signed] = [props.account, props.signed];
     
     const logout = async () => {
         // dispatch({
@@ -174,31 +174,21 @@ const Header = (props) => {
 
     const userSubMenuOptions = [];
 
-    if( account && account.google && account.email != undefined ) {
+    if( signed ) {
         routes.push(
-            {name: "Home", link: "/", activeIndex: userActiveIndex},
-            {name: "My videos", link: "/my/videos", activeIndex: ++userActiveIndex},
-            {name: "Watch", link: "/watch", activeIndex: ++userActiveIndex, 
+            {name: "Home", link: "/", component: "home", activeIndex: userActiveIndex},
+            {name: "My videos", link: "/my/videos", component: "myvideos", activeIndex: ++userActiveIndex},
+            {name: "Watch", link: "/watch", component: "watch", activeIndex: ++userActiveIndex, 
                 icon: <LocalCafeOutlinedIcon fontSize="small" />
             },
-            {name: "MY", link: "/my", activeIndex: ++userActiveIndex},
+            {name: "MY", link: "/my", component: "my", activeIndex: ++userActiveIndex},
             {
-                name: "Logout", link: "#logout", activeIndex: ++userActiveIndex,
+                name: "Logout", link: "#logout", component: "logout", activeIndex: ++userActiveIndex,
                 mouseOver: event => handleClick(event),
                 click: event => handleClick(event),
                 // icon: <LocalCafeOutlinedIcon fontSize="small" />
             }
         );
-
-
-        // {
-        //     name: user && user.name, link: "#logout", activeIndex: ++userActiveIndex,
-        //     ariaOwns: anchorEl ? "logout-submenu" : undefined,
-        //     ariaPopup: anchorEl ? "true" : undefined,
-        //     mouseOver: event => handleClick(event),
-        //     click: event => handleClick(event),
-        //     icon: <LocalCafeOutlinedIcon fontSize="small" />
-        // }
     } else {
         routes.push(
             {name: "Home", link: "/", activeIndex: ++userActiveIndex},

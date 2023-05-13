@@ -3,9 +3,15 @@
 import React, { useEffect } from 'react';
 import YouTube from 'react-youtube';
 import { Grid } from "@mui/material";
+import SubscriberForm from '../forms/SubscriberForm';
 
 
-const YTVideo = ({videoId, current, loop, players, setPlayers}) => {
+const YTVideo = ({
+  videoId, current, 
+  loop, players, setPlayers,
+  handleEventUnSubscribeApi,
+  handleEventSubscribeApi
+}) => {
   const [player, setPlayer] = React.useState({getCurrentTime: function() {return 0;}});
   const [time, setTime] = React.useState(0);
 
@@ -143,12 +149,13 @@ const YTVideo = ({videoId, current, loop, players, setPlayers}) => {
         scrollSnapAlign: "start",
         position: "relative",
         border: "1px solid transparent",
+        position: "relative"
       }}>
         <Grid item sx={{
         justifyContent: "center",
         alignItems: "center",
         display: "flex",
-        height: "100%",
+        height: "90%",
         }}
         className="youtube-card-container">
           <input type="hidden" className="currentTimeInterval" value="0" />
@@ -168,9 +175,16 @@ const YTVideo = ({videoId, current, loop, players, setPlayers}) => {
             }}
           />
           {/* UC_x5XG1OV2P6uZZ5FSM9Ttw */}
-          <div className="gyt-cont">
-            <div className="g-ytsubscribe" data-channel="GoogleDevelopers"></div>
-          </div>
+          
+        </Grid>
+        <Grid item
+          sx={{
+            position: "absolute",
+            bottom: "15%",
+            right: "-10px"
+          }}
+        >
+          <SubscriberForm id="UCHQKmIg-hMxC_fgvmHucphQ" handleEventUnSubscribeApi={handleEventUnSubscribeApi} handleEventSubscribeApi={handleEventSubscribeApi} />
         </Grid>
         
       </Grid>

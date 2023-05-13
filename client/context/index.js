@@ -4,7 +4,8 @@ import {useReducer, createContext, useEffect} from 'react';
 import { useRouter } from 'next/router';
 
 const initialState = {
-    user: null
+    user: null,
+    gapi: null
 };
 
 
@@ -17,9 +18,11 @@ const Context = createContext();
 function rootReducer(state, action) {
     switch(action.type) {
         case "LOGIN":
-            return { ...state, user: action.payload };
+            return { ...state, user: action.payload, gapi };
         case "LOGOUT":
-            return { ...state, user: null };
+            return { ...state, user: null, gapi: null };
+        case "GAPI":
+            return { ...state, user: null, gapi: action.payload };
         default:
             return state;
     }
@@ -33,8 +36,9 @@ const Provider = ({children}) => {
     
     useEffect(() => {
         dispatch({
-            type: "LOGIN",
-            payload: JSON.parse(window.localStorage.getItem('user')),
+            type: "GAPI",
+            // payload: JSON.parse(window.localStorage.getItem('gapi')),
+            payload: {}
         });
         // console.log('login');
     }, []);
