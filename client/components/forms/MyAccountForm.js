@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from 'next/router';
 import { FormGroup, TextField, Grid, Avatar, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
@@ -41,6 +42,8 @@ const MyAccountForm = ({}) => {
     const [controlChannelBtns, setControlChannelBtns] = useState(false);
     const [controlChannelBtnsLoad, setControlChannelBtnsLoad] = useState(false);
     
+
+    const router = useRouter();
     
     useEffect(function () {
         // if( Object.keys(account).length > 0 && account.email != undefined  ) {
@@ -92,6 +95,7 @@ const MyAccountForm = ({}) => {
         if(Object.keys(channelObj).length <= 0) {
             return null;
         }
+
         const preview = document.getElementById("iframe-preview-channel").contentWindow.document.body.innerHTML;
         const form_data = {
             channelId,
@@ -107,11 +111,13 @@ const MyAccountForm = ({}) => {
             // setMyChannels([response.data, ...myPrevChs]);
             // toast.success('Video added successfully');
             // setChannelAdded(true);
-            if(response.ok) {
-                window.location.href = window.location.href;
+            // console.log(response);
+            // console.log(response.ok.data.ok);
+            if(typeof(response.data.ok) == "boolean" && response.data.ok) {
+                router.push("/in/my");
             }
         }).catch(error => {
-            // console.log()
+            console.log(error)
             // statusChangedByField();
             // setVideoError(videoError+1);
             // if(videoError >= 9) {
@@ -199,9 +205,9 @@ const MyAccountForm = ({}) => {
                     
                 }}
             >
-                                How to got your channel URL <a href="https://www.youtube.com/watch?v=PdcCFs5yCas"> Guides </a>
+                                How to got your channel URL <a target='_blank' href="https://www.youtube.com/watch?v=PdcCFs5yCas"> Guides </a>
 <br/><br/>
-Example of Youtube video URL: <a target="_blank" href="https://www.youtube.com/channel/UCMV5InJthjFMMd08o5DVRfQ">https://www.youtube.com/channel/UCMV5InJthjFMMd08o5DVRfQ</a>
+Example of Channel URL: <a target="_blank" href="https://www.youtube.com/channel/UCMV5InJthjFMMd08o5DVRfQ">https://www.youtube.com/channel/UCMV5InJthjFMMd08o5DVRfQ</a>
                 <br/>
             
             </Typography>

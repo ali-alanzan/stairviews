@@ -36,6 +36,8 @@ const Index = (props) => {
         setChannelLoaded(false);
         if(Object.keys(data).length > 0) {
             setMyChannel(data);
+        } else {
+            router.push("/in/my/add");
         }
         setChannelLoaded(true);
     },  [account]);    
@@ -56,3 +58,14 @@ const Index = (props) => {
 }
 
 export default Index;
+
+ {/* _id
+title
+customUrl
+channelId
+published
+subscriberCount
+viewCount
+subscribedCount
+subscribers
+preview */}

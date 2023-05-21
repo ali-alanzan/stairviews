@@ -53,5 +53,5 @@ export const myChannel = async(req, res) => {
     const channel = await Channel.findOne({user: account.user})
     .exec();
 
-    res.json(channel);
+    res.json(channel?channel:{});
 }

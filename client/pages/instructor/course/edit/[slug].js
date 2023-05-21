@@ -418,6 +418,7 @@ const CourseEdit = () => {
                     
                         {JSON.stringify(image, null, 1)}
                     </pre> */}
+                   
                 </Grid>
                 {values && values.lessons && values.lessons.length > 0 && <Grid container direction="column" sx={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
 

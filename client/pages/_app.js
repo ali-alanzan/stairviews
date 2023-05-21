@@ -175,6 +175,7 @@ function MyApp({ Component, pageProps }) {
                 <Component
                   {...pageProps} account={account} />
           </ThemeProvider>
+          
       </Provider>
     </React.StrictMode>
   );

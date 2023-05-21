@@ -51,10 +51,8 @@ export const allMyVideos = async (req, res) => {
     // const user = await Video.findById(req.account.id).exec();
     const account = JSON.parse(req.query.account);
     
-    let userExist = await User.findOne({email: account.email}).exec();
-
     // console.log("req.query.account", req.query.account);
-    const videos = await Video.find({user: userExist._id})
+    const videos = await Video.find({user: account.user})
     .exec();
 
     res.json(videos);

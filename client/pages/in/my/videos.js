@@ -55,17 +55,17 @@ const Videos = ({account, handleEventUnSubscribeApi, handleEventSubscribeApi}) =
     };
 
     useEffect(async () => {
-        if( Object.keys(account).length > 0 && account.email != undefined  ) {
-            const {data} = await axios.get(`/api/myvideos`, {
-                params: {
-                    account: getStoredUser()
-                }
-            });
+        // if( Object.keys(account).length > 0 && account.email != undefined  ) {
+        //     const {data} = await axios.get(`/api/myvideos`, {
+        //         params: {
+        //             account: getStoredUser()
+        //         }
+        //     });
 
-            if(Object.keys(data).length > 0) {
-                setMyVideos(data);
-            }
-        }
+        //     if(Object.keys(data).length > 0) {
+        //         setMyVideos(data);
+        //     }
+        // }
     },  [account]);
 
     return (
