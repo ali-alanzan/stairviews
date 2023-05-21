@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Grid, useMediaQuery } from '@mui/material';
 import {toast} from 'react-toastify';
 import { useRouter } from 'next/router';
-import AddVideoForm from '../../components/forms/AddVideoForm';
+import AddVideoForm from '../../../components/forms/AddVideoForm';
 import axios from 'axios';
 import { useTheme } from '@mui/styles';
-import MyVideoCard from "../../components/cards/MyVideoCard";
+import MyVideoCard from "../../../components/cards/MyVideoCard";
+import { getStoredUser } from '../../../components/utills/helpers';
 
 
 const Videos = ({account, handleEventUnSubscribeApi, handleEventSubscribeApi}) => {
@@ -57,10 +58,7 @@ const Videos = ({account, handleEventUnSubscribeApi, handleEventSubscribeApi}) =
         if( Object.keys(account).length > 0 && account.email != undefined  ) {
             const {data} = await axios.get(`/api/myvideos`, {
                 params: {
-                    account: {
-                        email: account.email,
-                        password: account.password
-                    }
+                    account: getStoredUser()
                 }
             });
 

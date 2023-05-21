@@ -1,95 +1,58 @@
-
-// js
 import React, { useEffect } from 'react';
-import YouTube from 'react-youtube';
-import { Grid } from "@mui/material";
-import Script from 'next/script';
-import Typography from '@mui/material/Typography';
-import { Button } from '@mui/material';
-// import { MyDriveComponent } from '../forms/MyDriveComponent.js'
-import SubscriberForm from '../forms/SubscriberForm.js';
+import { observer } from 'mobx-react-lite';
+import useScript from 'react-script-hook';
+import { CircularProgress } from '@mui/material';
 
 
-
-
-const YTChannelCard = ({ }) => {
-
-    useEffect(() => {
-       
-    }, []);
-    
-    const  videoOnReady = (event) => {
-      setPlayer(event.target);
-
-      // const player = player;
-      // access to player in all event handlers via event.target
-      // event.target.pauseVideo();
-      //  player.seekTo(50)
-      //  console.log("state", this.state);
-      //  console.log("ready", player);
-      //  console.log(event);
-
-    }
-
-    const videoOnStateChange = (event) => {
-      const player = event.target;
-      console.log("state", player.getDuration());
-      console.log(player.videoTitle);
-      if(!player.videoTitle) {
-        setError(true);
-      }
-    }
-
-    const handleOnClickSubscribe = () => {
-
-    }
-
-    const opts = {
-      height: '190',
-      width: '440',
-      playerVars: {
-        // https://developers.google.com/youtube/player_parameters
-        autoplay: 0,
-      },
-      origin: "https://www.youtube.com"
-    };
-  
-
-
-    return (
-      <Grid container>
-        <Script src="http://apis.google.com/js/platform.js"/>
-
-        <Grid item sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        display: "flex",
-        height: "100%",
-        }}
-        className="youtube-card-container">
-        </Grid>
-        <Grid item>
-        <Button size="small"
-          onClick={handleOnClickSubscribe}
-        >
-            <Typography gutterBottom variant="h5"
-                sx={{
-                    margin: 0,
-                }}
-            >
-              <SubscriberForm/>
-            </Typography>
-        </Button>
-            
-        </Grid>
-      </Grid>
-    );
+const gapiYt =  {
+  ytsubscribe: {
+    container: "",
+    parameters: {'channel': "", 'layout': ""}
+  }
 }
 
-//clientID: 854452941545-f2nmavdc2l2pkgetv76dsvhtdr8o0hne.apps.googleusercontent.com
-//clientID: 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
-//clientID: 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
+const styled = `
+#main-app-bar-header {
+  display: none !important;
+}
+* {
+  background-color: rgba(0, 0, 0, 0.87) !important;
+}
+.css-yrf2vu-MuiPaper-root {
+  min-height: 30px;
+}
 
+.g-ytsubscribe {
+  z-index:99999;
+}
+`;
 
+const YTChannelCard = observer(({ youtubeChannel }) => {
+    const [gapiLoading, gapiError] = useScript({ src: 'https://apis.google.com/js/platform.js'});
+
+    useEffect(() => {
+        if (!youtubeChannel) {
+            return;
+        }
+        
+        if (gapiLoading || gapiError) {
+            return;
+        }  
+    }, [youtubeChannel, gapiLoading, gapiError]);
+
+    return (
+        <>
+          <style>{styled}</style>
+          <div 
+            className="g-ytsubscribe"
+            data-channelid={youtubeChannel}
+            data-layout="full"
+            data-theme="dark"
+            data-count="default">
+            <CircularProgress />
+        </div>
+        </>
+    );
+});
 
 export default YTChannelCard;

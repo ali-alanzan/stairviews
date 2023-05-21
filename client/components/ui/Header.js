@@ -135,11 +135,12 @@ const Header = (props) => {
         // dispatch({
             // type: 'LOGOUT'
         // });
+        window.localStorage.user = null;
         window.localStorage.removeItem('user');
-        const {data} = await axios.get("/api/logout");
-
-        toast(data.message);
-        router.push('/login')
+        // const {data} = await axios.get("/api/logout");
+        // toast(data.message);
+        toast("Logged out")
+        router.push('/')
     }
 
     
@@ -174,14 +175,14 @@ const Header = (props) => {
 
     const userSubMenuOptions = [];
 
-    if( signed ) {
+    if( account.signed ) {
         routes.push(
             {name: "Home", link: "/", component: "home", activeIndex: userActiveIndex},
-            {name: "My videos", link: "/my/videos", component: "myvideos", activeIndex: ++userActiveIndex},
-            {name: "Watch", link: "/watch", component: "watch", activeIndex: ++userActiveIndex, 
+            {name: "My videos", link: "/in/my/videos", component: "myvideos", activeIndex: ++userActiveIndex},
+            {name: "Watch", link: "/in/watch", component: "watch", activeIndex: ++userActiveIndex, 
                 icon: <LocalCafeOutlinedIcon fontSize="small" />
             },
-            {name: "MY", link: "/my", component: "my", activeIndex: ++userActiveIndex},
+            {name: "MY", link: "/in/my", component: "my", activeIndex: ++userActiveIndex},
             {
                 name: "Logout", link: "#logout", component: "logout", activeIndex: ++userActiveIndex,
                 mouseOver: event => handleClick(event),
@@ -369,6 +370,7 @@ const Header = (props) => {
                     backgroundColor: '#1d0a2b',
                     height: '80px'
                 }}
+                id="main-app-bar-header"
             >
                 <Toolbar disableGutters>
                     <Button sx={{

@@ -1,6 +1,15 @@
 import axios from 'axios';
 
 
+export function getStoredUser () {
+  let user = {};
+  try {
+    user = JSON.parse(window.localStorage.user);
+  } catch(err) {
+    // console.log(err);
+  }
+  return user;
+}
 
 // export function getClientId() {
 //   dotenv.config()

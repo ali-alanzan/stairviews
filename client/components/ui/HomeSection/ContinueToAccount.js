@@ -40,33 +40,36 @@ const ContinueToAccount = ({setSigned, setSession, setStage}) => {
             // // req.send();
             return gapi.auth2.getAuthInstance()
                 .signIn({
-                    scope: 'email profile https://www.googleapis.com/auth/youtube.force-ssl',
+                    scope: 'email profile https://www.googleapis.com/auth/youtube',
                     prompt: "consent"
                 })
                 .then(async () => {
                     // document.getElementById("block").innerHTML = '';
-                    // console.log("Sign In Successful");
+                    console.log("Sign In Successful");
                     // console.log("logged-gapi", gapi);
                     const auth2 = gapi.auth2.getAuthInstance(),
                     profile = auth2.currentUser.get().getBasicProfile();
+                    const uName = profile.getName(),
+                    subsc = uName.indexOf(" "),
+                    subsclimit = subsc > 0 ? subsc : uName.length,
+                    firstName = uName.substring(0, subsclimit),
+                    lastName = subsc > 0 ? uName.substring(subsclimit) : "";
                     const user_data = {
                         name: profile.getName(), 
+                        firstName,
+                        lastName,
                         email: profile.getEmail(),
                         image: profile.getImageUrl(),
                         information: profile,
                         userAgent: window.navigator.userAgent
                     };
-                    const {data} = await axios.post(`/api/user-session`, user_data);
-                    // setStage("watch");
-                    // setSigned(true);
-                    // setSession(data);
-                    // console.log(profile, profile.information);
-                    window.localStorage.user = data;
-                    await Promise.resolve(() => {
-                        setTimeout(function () {
-                            router.push("/watch")
-                        }, 1000);
-                    });
+                    const {data} = await axios.post(`/api/user-join`, user_data);
+                    
+                    console.log(data);
+                    window.localStorage.user = JSON.stringify(data);
+                    setTimeout(function () {
+                        router.push("/watch");
+                    }, 1000);
                 }, function (err) {
                     console.log(err)
                 });

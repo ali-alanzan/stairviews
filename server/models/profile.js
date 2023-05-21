@@ -28,6 +28,15 @@ const profileSchema = new Schema(
             trim: true,
             required: true
         },
+        firstName: {
+            type: String, 
+            trim: true,
+            required: true
+        },
+        lastName: {
+            type: String, 
+            trim: true
+        },
         email: {
             type: String, 
             trim: true,
@@ -53,10 +62,10 @@ const profileSchema = new Schema(
         ],
         watching_balance: 0,
         subscribers: [subscribersSchema],
-        token: {
-            type: String, 
-            required: true,
-        },
+        // token: {
+        //     type: String, 
+        //     required: true,
+        // },
     },
     {timestamps: true}
 );

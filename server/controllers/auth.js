@@ -19,11 +19,20 @@ export const addUserSession = async (req, res) => {
     const ip = req.socket.remoteAddress ? req.socket.remoteAddress : req.ip;
 
     try {  
-        const { name, email, image, information, userAgent } = req.body;
+        const { name, email, image, information, userAgent, firstName, lastName } = req.body;
         if (!name || !email || Object.keys(information).length <= 0) return res.status(400).send("Sessin is required")
         // check if our db has user with that email
         let profile = await Profile.findOne({email}).exec();
 
+
+        if(!profile) {
+            // register 
+            profile = new Profile({
+                name, firstName, lastName,
+                email, image, information
+            });
+            await profile.save();
+        }
         // create signed jwt
         const token = jwt.sign(
             {
@@ -33,15 +42,7 @@ export const addUserSession = async (req, res) => {
             {expiresIn: '7d'}
         );
         
-        if(!profile) {
-            // register 
-            profile = new Profile({
-                name, email, image, information, token
-            });
-            await profile.save();
-        }
-
-        console.log(profile);
+        // console.log(profile);
         // Profile
         // name, email, image, information, date, time
 
@@ -68,14 +69,35 @@ export const addUserSession = async (req, res) => {
         }).exec();
 
 
-        return res.json({ok: true, session: session._id, token: token, user: profile._id});
+        return res.json({session: session._id, token: token, user: profile._id});
     } catch(err) {
         console.log(err);
     }
 }
 
 
-
+export const verifySession = async(req, res) => {
+    try {
+        const {session, token, user} = req.body;
+        let sessionExist = await Session.findOne({
+            session,
+            token,
+            user
+        });
+        console.log(session, token, user);
+        if(!sessionExist) return res.json({error: "Session is invalid"});
+        const profile = await Profile.findOne({_id: user}).exec();
+        const profile_user = {
+            email: profile.email,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            image: profile.image,
+        };
+        return res.json({ok: true, profile_user});
+    } catch(err) {
+        console.log(err);
+    }
+}
 
 export const register = async (req, res) => {
 

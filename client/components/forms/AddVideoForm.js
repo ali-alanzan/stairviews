@@ -9,6 +9,7 @@ import {toast} from 'react-toastify';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import SubscriberForm from './SubscriberForm';
+import { getStoredUser } from '../utills/helpers'; 
 
 const Input = styled('input')({
     display: 'none',
@@ -58,7 +59,7 @@ const AddVideoForm = ({account, updateVideoCards, myVideos, setMyVideos,  handle
             addedVideoId, 
             videoTitle, 
             duration, 
-            account
+            account: getStoredUser()
         };
 
 

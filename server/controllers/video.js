@@ -2,9 +2,13 @@ import { fetchJSON, randomString } from '../../client/components/utills/helpers'
 // import axios from 'axios';
 import Video from '../models/video';
 import User from '../models/user';
+import Channel from '../models/channel';
 
 import { hashPassword, comparePassword } from '../utills/auth';
 import slugify from 'slugify';
+
+
+
 
 const client_id = process.env.CLIENT_ID;
 const scope = "openid";

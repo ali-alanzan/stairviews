@@ -1,6 +1,8 @@
 import expressJwt from 'express-jwt';
 import Course from '../models/course';
 import User from '../models/user';
+import Profile from '../models/profile';
+import Session from '../models/session';
 import { comparePassword } from '../utills/auth';
 
 export const requireSignIn = expressJwt({
@@ -11,26 +13,23 @@ export const requireSignIn = expressJwt({
 
 
 export const requireGoogleAuthClientToServer = async (req, res, next) => {
+
     try {
 
         const account = req.query.account != undefined  ? JSON.parse(req.query.account) : req.body.account;
-        console.log('account', account);
-    
-        const user = await User.findOne({email: account.email}).exec();
-        // console.log('user', user);
-        // let userExist = await User.findOne({email}).exec();
-        const match = await comparePassword(account.password, user.password);
-        
-        if(user == null || !match) {
-            return res.sendStatus(403);
-        } else {
-            next();
-        }
-
+        const {session, token, user} = account;
+        let sessionExist = await Session.findOne({
+            session,
+            token,
+            user
+        });
+        console.log(session, token, user);
+        if(!sessionExist) return res.sendStatus(403);
+        next();
     } catch(err) {
-        // console.log(err);
-        return res.status(403).send("Login Invalid");
+       console.log(err);
     }
+    
     
 }
 

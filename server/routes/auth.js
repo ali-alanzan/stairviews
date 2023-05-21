@@ -13,11 +13,12 @@ const router = express.Router();
 // import {requireSignIn} from '../middleware';
 
 import {addUserSession} from '../controllers/auth';
+import {verifySession} from '../controllers/auth';
 
 
 
-router.post("/user-session", addUserSession);
-
+router.post("/user-join",      addUserSession);
+router.post("/verify-account", verifySession);
 
 // router.post('/register', register);
 // router.post('/logingoogle', loginGoogle);
